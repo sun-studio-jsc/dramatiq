@@ -157,6 +157,12 @@ class RabbitmqBroker(Broker):
     def exchange(self):
         return ""
 
+    def routing(self, message: Message):
+        """
+        Override this method to change routing key
+        """
+        return message.queue_name
+
     @property
     def channel(self):
         """The :class:`pika.BlockingChannel` for the current thread.
@@ -332,7 +338,7 @@ class RabbitmqBroker(Broker):
                 self.emit_before("enqueue", message, delay)
                 self.channel.basic_publish(
                     exchange=self.exchange,
-                    routing_key=queue_name,
+                    routing_key=self.routing(message),
                     body=message.encode(),
                     properties=pika.BasicProperties(
                         delivery_mode=2,
