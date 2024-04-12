@@ -153,7 +153,6 @@ class RabbitmqBroker(Broker):
             except Exception:
                 self.logger.exception("Encountered exception while closing Connection.")
 
-    @property
     def exchange(self, message: Message):
         return ""
 
