@@ -154,6 +154,10 @@ class RabbitmqBroker(Broker):
                 self.logger.exception("Encountered exception while closing Connection.")
 
     @property
+    def exchange(self):
+        return ""
+
+    @property
     def channel(self):
         """The :class:`pika.BlockingChannel` for the current thread.
         This property may change without notice.
@@ -327,7 +331,7 @@ class RabbitmqBroker(Broker):
                 self.logger.debug("Enqueueing message %r on queue %r.", message.message_id, queue_name)
                 self.emit_before("enqueue", message, delay)
                 self.channel.basic_publish(
-                    exchange="",
+                    exchange=self.exchange,
                     routing_key=queue_name,
                     body=message.encode(),
                     properties=pika.BasicProperties(
